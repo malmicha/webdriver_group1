@@ -25,10 +25,10 @@ public class DeliverToTests {
 
     @Test
     public void selenideTest3() {
-        String shippintToText = new HomePage().open()
+        String shippingToText = new HomePage().open()
                 .openDeliverToPopupModule().selectCanada().openSelectedCategoryPage()
                 .openSelectedElementPage().getShippingDetailsText();
-        Assert.assertTrue(shippintToText.contains("Canada"));
+        Assert.assertTrue(shippingToText.contains("Canada"));
     }
 
 
