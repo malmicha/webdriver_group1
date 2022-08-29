@@ -28,18 +28,20 @@ public class DeliverToTests {
 
     @Test
     public void selenideTest2() {
-        boolean isPolandExist = new HomePage().open()
+        String selectedCountry = "Poland";
+        boolean isCountryExist = new HomePage().open()
                 .openDeliverToPopupModule().getListOfCountries().stream()
-                .anyMatch(country -> country.getText().equals("Poland"));
-        Assert.assertTrue(isPolandExist, "Selected country does not exist");
+                .anyMatch(country -> country.equals(selectedCountry));
+        Assert.assertTrue(isCountryExist, "Selected country does not exist");
     }
 
     @Test
     public void selenideTest3() {
+        String selectedCountry = "Canada";
         String shippingToText = new HomePage().open()
-                .openDeliverToPopupModule().selectCanada().openSelectedCategoryPage()
+                .openDeliverToPopupModule().selectCountry(selectedCountry).openSelectedCategoryPage()
                 .openSelectedElementPage().getShippingDetailsText();
-        Assert.assertTrue(shippingToText.contains("Canada"), "Delivery destination is not chosen");
+        Assert.assertTrue(shippingToText.contains(selectedCountry), "Delivery destination is not chosen");
     }
 
 }
