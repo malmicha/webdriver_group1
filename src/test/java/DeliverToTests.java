@@ -12,7 +12,6 @@ public class DeliverToTests {
         Selenide.clearBrowserCookies();
     }
 
-    //Training using DataProviders
     @DataProvider(name = "destinationIndex")
     public Object[][] destinationIndex() {
         return new Object[][]{
