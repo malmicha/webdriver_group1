@@ -1,5 +1,4 @@
 package pageobject.pages;
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
@@ -14,7 +13,7 @@ import static com.codeborne.selenide.Selenide.$;
 public class HomePage {
     private SelenideElement deliverToButton = $(By.id("glow-ingress-line2"));
     private SelenideElement deliverToValue = $(By.id("glow-ingress-line2"));
-    private SelenideElement selectedCategoryButton = $(By.xpath("//*[@id=\"I-4e1KwG85HRYdyAZdHnUw\"]/div[2]/div[1]/div[1]/a"));
+    private SelenideElement selectedCategoryButton = $(By.xpath("//a[@aria-label = \"Notebooks\"]"));
 
     public HomePage open() {
         Selenide.open("https://amazon.com/");
@@ -31,8 +30,8 @@ public class HomePage {
     }
 
     public SelectedCategoryPage openSelectedCategoryPage() {
-        Selenide.Wait();
-        selectedCategoryButton.shouldBe(visible).click();
+        Selenide.sleep(3000);
+        selectedCategoryButton.should(exist, Duration.ofSeconds(10)).shouldBe(visible).click();
         return new SelectedCategoryPage();
     }
 }
