@@ -12,6 +12,7 @@ public class DeliverToTests {
         Selenide.clearBrowserCookies();
     }
 
+    //training to use Data providers
     @DataProvider(name = "destinationIndex")
     public Object[][] destinationIndex() {
         return new Object[][]{
@@ -43,5 +44,4 @@ public class DeliverToTests {
                 .openSelectedElementPage().getShippingDetailsText();
         Assert.assertTrue(shippingToText.contains(selectedCountry), "Delivery destination is not chosen");
     }
-
 }
