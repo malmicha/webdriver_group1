@@ -11,11 +11,6 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class SearchResultsPage {
     private final ElementsCollection searchResults = $$(By.xpath("//*[@data-component-type=\"s-search-result\"]"));
-    private SelenideElement whole = $(By.className("a-price-whole"));
-    private SelenideElement fraction = $(By.className("a-price-fraction"));
-    private SelenideElement low_price = $(By.xpath("//*[@id=\"low-price\"]"));
-    private SelenideElement high_price = $(By.xpath("//*[@id=\"high-price\"]"));
-    private SelenideElement submitForm = $(By.xpath("//*[@id=\"priceRefinements\"]//form"));
     private SelenideElement dropDownPrompt = $(By.xpath("//*[@class=\"a-dropdown-prompt\"]"));
     private SelenideElement sort_select = $(By.xpath("//*[@id=\"s-result-sort-select_1\"]"));
 
@@ -27,10 +22,14 @@ public class SearchResultsPage {
         return element.$(By.tagName("h2")).getText().toLowerCase();
     }
 
-    public void filterByPrice() {
-        low_price.click();
-        high_price.click();
-        submitForm.submit();
+    public Double wholePrice(SelenideElement element) {
+        SelenideElement whole = element.$(By.className("a-price-whole"));
+        SelenideElement fraction = element.$(By.className("a-price-fraction"));
+        if (!whole.exists() || !fraction.exists()) {
+            return null;
+        }
+        String result = whole.getText() + "." + fraction.getText();
+        return Double.parseDouble(result);
     }
 
     public void sortingByLowToHighPrice() {
@@ -38,15 +37,5 @@ public class SearchResultsPage {
         sort_select.click();
     }
 
-    public void wholePrice() {
-        for (SelenideElement element : searchResults) {
-            whole = element;
-            fraction = element;
-            if (!whole.exists() || !fraction.exists()) {
-                continue;
-            }
-            String result = whole.getText() + "." + fraction.getText();
-            double price = Double.parseDouble(result);
-        }
-    }
+
 }
