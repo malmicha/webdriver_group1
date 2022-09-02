@@ -9,9 +9,12 @@ import static com.codeborne.selenide.Selenide.$;
 public class GamingChairsPage {
     private final SelenideElement brandLi = $(By.xpath("(//*[@id=\"brandsRefinements\"]//li)[2]"));
     private final SelenideElement brandInput = brandLi.$(By.tagName("input"));
-    private SelenideElement low_price = $(By.xpath("//*[@id=\"low-price\"]"));
-    private SelenideElement high_price = $(By.xpath("//*[@id=\"high-price\"]"));
-    private SelenideElement submitForm = $(By.xpath("//*[@id=\"priceRefinements\"]//form"));
+    private final SelenideElement low_price = $(By.xpath("//*[@id=\"low-price\"]"));
+    private final SelenideElement high_price = $(By.xpath("//*[@id=\"high-price\"]"));
+    private final SelenideElement submitForm = $(By.xpath("//*[@id=\"priceRefinements\"]//form"));
+    private final SelenideElement dropDownPrompt = $(By.xpath("//*[@class=\"a-dropdown-prompt\"]"));
+    private final SelenideElement sort_select = $(By.xpath("//*[@id=\"s-result-sort-select_1\"]"));
+
 
     public void filterByBrand() {
         brandInput.sendKeys(Keys.SPACE);
@@ -26,6 +29,11 @@ public class GamingChairsPage {
         low_price.sendKeys(String.valueOf(low));
         high_price.sendKeys(String.valueOf(high));
         submitForm.submit();
+    }
+
+    public void sortingByLowToHighPrice() {
+        dropDownPrompt.click();
+        sort_select.click();
     }
 }
 

@@ -4,15 +4,10 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
-import java.util.List;
-
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class SearchResultsPage {
     private final ElementsCollection searchResults = $$(By.xpath("//*[@data-component-type=\"s-search-result\"]"));
-    private SelenideElement dropDownPrompt = $(By.xpath("//*[@class=\"a-dropdown-prompt\"]"));
-    private SelenideElement sort_select = $(By.xpath("//*[@id=\"s-result-sort-select_1\"]"));
 
     public ElementsCollection getResults() {
         return searchResults;
@@ -31,11 +26,4 @@ public class SearchResultsPage {
         String result = whole.getText() + "." + fraction.getText();
         return Double.parseDouble(result);
     }
-
-    public void sortingByLowToHighPrice() {
-        dropDownPrompt.click();
-        sort_select.click();
-    }
-
-
 }
