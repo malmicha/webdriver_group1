@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class HomePage {
     private SelenideElement deliverToButton = $(By.id("glow-ingress-line2"));
-    private SelenideElement selectedCategoryButton = $(By.xpath("//a[@aria-label = \"Notebooks\"]"));
+    private SelenideElement selectedCategoryButton = $(By.xpath("//a[@aria-label = \"Toys & Games\"]"));
 
     public HomePage open() {
         Selenide.open("https://amazon.com/");
