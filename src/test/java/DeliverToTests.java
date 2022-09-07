@@ -1,110 +1,47 @@
-
-import org.openqa.selenium.By;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.codeborne.selenide.Selenide;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.sql.SQLOutput;
-import java.time.Duration;
-import java.util.List;
-
+import pageobject.pages.HomePage;
 
 public class DeliverToTests {
 
-    WebDriver webDriver;
-    WebElement deliverToButton;
-    WebElement popupListOfCountriesDropdown;
-
-
-    @BeforeMethod
-    public void openAmazonPage() {
-        if (webDriver == null) {
-            System.setProperty(
-                    "webdriver.chrome.driver",
-                    "C:\\Users\\stass\\IdeaProjects\\webdriver_group1\\src\\test\\resources\\webdriver\\chromedriver.exe"
-            );
-            webDriver = new ChromeDriver();
-        }
-        webDriver.get("https://amazon.com/");
-        webDriver.manage().window().maximize();
+    @AfterMethod
+    public void clearCookies() {
+        Selenide.clearBrowserCookies();
     }
 
-    @AfterTest
-    public void quitSession() {
-        webDriver.close();
-        webDriver.quit();
+    @DataProvider(name = "destinationIndex")
+    public Object[][] destinationIndex() {
+        return new Object[][]{
+                {"36104", "Montgomery"},
+        };
+    }
+
+    @Test(dataProvider = "destinationIndex")
+    public void selenideTest1(String index, String destination) {
+        String deliverToText = new HomePage().open()
+                .openDeliverToPopupModule().insertIndex(index).getDeliverToText();
+        Assert.assertTrue(deliverToText.contains(destination), "Delivery destination should change");
     }
 
     @Test
-    public void deliverTo_test1() {
-
-        WebElement deliverToButton = webDriver.findElement(By.id("glow-ingress-line2"));
-        deliverToButton.click();
-
-        WebElement popupInput = new WebDriverWait(webDriver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.id("GLUXZipUpdateInput")));
-        popupInput.click();
-        popupInput.sendKeys("36104");
-        WebElement popupApplyButton = webDriver.findElement(By.xpath("//*[@id=\"GLUXZipUpdate\"]/span/input"));
-        popupApplyButton.click();
-        WebElement popupContinueButton = new WebDriverWait(webDriver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[5]/div/div/div[2]/span/span")));
-        popupContinueButton.click();
-
-        webDriver.get("https://amazon.com/");
-
-        WebElement deliverToValue = webDriver.findElement(By.id("glow-ingress-line2"));
-        Assert.assertTrue(deliverToValue.getText().contains("Montgomery"));
+    public void selenideTest2() {
+        String selectedCountry = "Poland";
+        boolean isCountryExist = new HomePage().open()
+                .openDeliverToPopupModule().getListOfCountries().stream()
+                .anyMatch(country -> country.equals(selectedCountry));
+        Assert.assertTrue(isCountryExist, "Selected country does not exist");
     }
 
     @Test
-    public void deliverTo_test2() {
-
-        WebElement deliverToButton = webDriver.findElement(By.id("glow-ingress-line2"));
-        deliverToButton.click();
-
-        WebElement popupListOfCountriesDropdown = new WebDriverWait(webDriver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"GLUXSpecifyLocationDiv\"]/div[4]")));
-        popupListOfCountriesDropdown.click();
-        List<WebElement> listOfCountries = webDriver.findElements(By.className("a-dropdown-link"));
-        boolean isPolandExist = listOfCountries.stream().anyMatch(country -> country.getText().contains("Poland"));
-        Assert.assertTrue(isPolandExist);
-
+    public void selenideTest3() {
+        String selectedCountry = "Canada";
+        String shippingToText = new HomePage().open()
+                .openDeliverToPopupModule().selectCountry(selectedCountry).openSelectedCategoryPage()
+                .openSelectedElementPage().getShippingDetailsText();
+        Assert.assertTrue(shippingToText.contains(selectedCountry), "Delivery destination is not chosen");
     }
-
-    @Test
-    public void deliverTo_test3() {
-
-        WebElement deliverToButton = webDriver.findElement(By.id("glow-ingress-line2"));
-        deliverToButton.click();
-
-        WebElement popupListOfCountriesDropdown = new WebDriverWait(webDriver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"GLUXSpecifyLocationDiv\"]/div[4]")));
-        popupListOfCountriesDropdown.click();
-        WebElement canadaSelectButton = new WebDriverWait(webDriver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.id("GLUXCountryList_1")));
-        canadaSelectButton.click();
-        WebElement doneButton = webDriver.findElement(By.name("glowDoneButton"));
-        doneButton.click();
-
-        webDriver.get("https://amazon.com/");
-
-        WebElement notebooksCategoryButton = webDriver.findElement(By.xpath("/html/body/div[1]/div[2]/div[2]/div[2]/div[5]/div/div[2]/div[1]/div[1]/a"));
-        notebooksCategoryButton.click();
-
-        WebElement selectedElementFromCategory = webDriver.findElement(By.xpath("/html/body/div[1]/div[2]/div[1]/div[1]/div/span[3]/div[2]/div[2]/div/div/div/div/div/div"));
-        selectedElementFromCategory.click();
-        WebElement shippingDetails = webDriver.findElement(By.xpath("//*[@id=\"contextualIngressPtLabel_deliveryShortLine\"]/span[2]"));
-        Assert.assertTrue(shippingDetails.getText().contains("Canada"));
-
-    }
-
 
 }
