@@ -1,0 +1,39 @@
+image: markhobson/maven-chrome:jdk-11
+
+stages:
+  - test
+  - allure
+  - pages
+
+UI and API tests with allure reports:
+  stage: test
+  script:
+    - mvn clean test
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - target/allure-results/
+
+Allure report:
+  stage: allure
+  script:
+    - mvn allure:report
+  artifacts:
+    when: always
+    paths:
+      - target/site/allure-maven-plugin/*
+  rules:
+    - when: always
+
+pages:
+  image: alpine
+  stage: pages
+  script:
+    - mkdir -p public
+    - mv target/site/allure-maven-plugin/* public
+  artifacts:
+    when: always
+    paths:
+      - public
+
